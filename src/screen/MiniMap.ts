@@ -8,8 +8,8 @@ type IConstructor = {
 }
 
 const WINDOW_BAR_HEIGHT = 25
-const IN_GAME_MINI_MAP_HEIGHT = 10
-const IN_GAME_MINI_MAP_WIDTH = 10
+const IN_GAME_MINI_MAP_HEIGHT = 5
+const IN_GAME_MINI_MAP_WIDTH = 5
 const CHARACTER_HEX_COLOR = 'ffdd44'
 
 export default class MiniMap {
@@ -19,7 +19,7 @@ export default class MiniMap {
     topLeftWidth: number
 
     constructor({ height, width, oHeight, oWidth }: IConstructor) {
-        this.topLeftHeight = oHeight
+        this.topLeftHeight = oHeight + IN_GAME_MINI_MAP_HEIGHT
         this.topLeftWidth = oWidth
         this.height = height + oHeight
         this.width = width + oWidth
@@ -29,8 +29,7 @@ export default class MiniMap {
         const Y_DIMENSION = this.height + this.topLeftHeight
         const X_DIMENSION = this.width + this.topLeftWidth
         const miniMapImage = robot.screen.capture(X_DIMENSION, Y_DIMENSION)
-        const SEARC_INC = 4
-        miniMapImage.colorAt(500, 500)
+        const SEARC_INC = 6
         for (let y = this.topLeftHeight; y < Y_DIMENSION; y += SEARC_INC) {
             for (let x = this.topLeftWidth; x < X_DIMENSION; x += SEARC_INC) {
                 if (miniMapImage.colorAt(x, y) === CHARACTER_HEX_COLOR) {
