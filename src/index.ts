@@ -1,16 +1,21 @@
-import { run, press, wait } from './Key'
+import { key } from './key'
+import { sleep, asyncPipe } from './utils'
 
 (async () => {
-    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+    const {
+        hold,
+        press,
+        release,
+        wait
+    } = key
     await sleep(1000)
     for (let i = 0; i < 1; i++) {
-        await sleep(100)
-        const hello = run(
-            wait(5000),
-            press.left,
+        const hello = asyncPipe(
+            wait(2000),
+            release.left,
         )
-        await run(
-            press.left,
+        await asyncPipe(
+            hold.left,
             hello
         )()
     }
