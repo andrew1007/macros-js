@@ -35,33 +35,39 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var Key_1 = require("./Key");
+var key_1 = require("./key");
+var utils_1 = require("./utils");
+var MiniMap_1 = __importDefault(require("./screen/MiniMap"));
 (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var sleep, i, hello;
+    var minimap, hold, wait, release, i, hello;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                sleep = function (ms) { return new Promise(function (resolve) { return setTimeout(resolve, ms); }); };
-                return [4 /*yield*/, sleep(1000)];
+            case 0: return [4 /*yield*/, utils_1.sleep(1000)];
             case 1:
                 _a.sent();
+                minimap = new MiniMap_1.default({
+                    height: 150,
+                    width: 150
+                });
+                minimap.getCharacter();
+                hold = key_1.key.hold, wait = key_1.key.wait, release = key_1.key.release;
                 i = 0;
                 _a.label = 2;
             case 2:
-                if (!(i < 1)) return [3 /*break*/, 6];
-                return [4 /*yield*/, sleep(100)];
+                if (!(i < 1)) return [3 /*break*/, 5];
+                hello = utils_1.asyncPipe(wait(5000), release.left);
+                return [4 /*yield*/, utils_1.asyncPipe(hold.left, hello)()];
             case 3:
                 _a.sent();
-                hello = Key_1.run(Key_1.wait(5000), Key_1.press.left);
-                return [4 /*yield*/, Key_1.run(Key_1.press.left, hello)()];
+                _a.label = 4;
             case 4:
-                _a.sent();
-                _a.label = 5;
-            case 5:
                 i++;
                 return [3 /*break*/, 2];
-            case 6: return [2 /*return*/];
+            case 5: return [2 /*return*/];
         }
     });
 }); })();

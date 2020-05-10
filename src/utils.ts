@@ -1,4 +1,4 @@
-export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+export const sleep: (ms: number) => Promise<void> = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 export type pipeableFunc = () => Promise<any>
 

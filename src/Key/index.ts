@@ -10,6 +10,7 @@ interface keys {
 const press = new Proxy<keys>(_, {
     get: function (_, prop: string) {
         return () => {
+            console.error('pressing key:', prop)
             robot.keyTap(prop)
         }
     }
@@ -18,6 +19,7 @@ const press = new Proxy<keys>(_, {
 const hold = new Proxy<keys>(_, {
     get: function (_, prop: string) {
         return () => {
+            console.error('holding key:', prop)
             robot.keyToggle(prop, 'down')
         }
     }
@@ -26,13 +28,21 @@ const hold = new Proxy<keys>(_, {
 const release = new Proxy<keys>(_, {
     get: function (_, prop: string) {
         return () => {
+            console.error('releasing key:', prop)
             robot.keyToggle(prop, 'up')
         }
     }
 })
 
 const wait = (ms: number) => async () => {
-    await sleep(ms)
+    const positiveModifier = !!Math.round(Math.random())
+    const msModifier = positiveModifier ? Math.random() * 700 : -Math.random() * 700
+    console.error('waiting: ', (ms + msModifier).toFixed(1), 'ms')
+    await sleep(ms + msModifier)
+}
+
+const waitUntil = (cb: () => Promise<void>) => async () => {
+    await cb()
 }
 
 export const key = {
@@ -40,4 +50,5 @@ export const key = {
     hold,
     release,
     wait,
+    waitUntil
 }

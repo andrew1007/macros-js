@@ -35,17 +35,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __values = (this && this.__values) || function(o) {
-    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-    if (m) return m.call(o);
-    if (o && typeof o.length === "number") return {
-        next: function () {
-            if (o && i >= o.length) o = void 0;
-            return { value: o && o[i++], done: !o };
-        }
-    };
-    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -53,60 +42,59 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var robotjs_1 = __importDefault(require("robotjs"));
 var utils_1 = require("../utils");
 var _ = {};
-exports.press = new Proxy(_, {
+var press = new Proxy(_, {
     get: function (_, prop) {
         return function () {
+            console.error('pressing key:', prop);
             robotjs_1.default.keyTap(prop);
         };
     }
 });
-exports.wait = function (ms) { return function () { return __awaiter(void 0, void 0, void 0, function () {
+var hold = new Proxy(_, {
+    get: function (_, prop) {
+        return function () {
+            console.error('holding key:', prop);
+            robotjs_1.default.keyToggle(prop, 'down');
+        };
+    }
+});
+var release = new Proxy(_, {
+    get: function (_, prop) {
+        return function () {
+            console.error('releasing key:', prop);
+            robotjs_1.default.keyToggle(prop, 'up');
+        };
+    }
+});
+var wait = function (ms) { return function () { return __awaiter(void 0, void 0, void 0, function () {
+    var positiveModifier, msModifier;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, utils_1.sleep(ms)];
+            case 0:
+                positiveModifier = !!Math.round(Math.random());
+                msModifier = positiveModifier ? Math.random() * 700 : -Math.random() * 700;
+                console.error('waiting: ', (ms + msModifier).toFixed(1), 'ms');
+                return [4 /*yield*/, utils_1.sleep(ms + msModifier)];
             case 1:
                 _a.sent();
                 return [2 /*return*/];
         }
     });
 }); }; };
-exports.run = function () {
-    var funcs = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        funcs[_i] = arguments[_i];
-    }
-    return function () { return __awaiter(void 0, void 0, void 0, function () {
-        var funcs_1, funcs_1_1, func, e_1_1;
-        var e_1, _a;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    _b.trys.push([0, 5, 6, 7]);
-                    funcs_1 = __values(funcs), funcs_1_1 = funcs_1.next();
-                    _b.label = 1;
-                case 1:
-                    if (!!funcs_1_1.done) return [3 /*break*/, 4];
-                    func = funcs_1_1.value;
-                    return [4 /*yield*/, func()];
-                case 2:
-                    _b.sent();
-                    _b.label = 3;
-                case 3:
-                    funcs_1_1 = funcs_1.next();
-                    return [3 /*break*/, 1];
-                case 4: return [3 /*break*/, 7];
-                case 5:
-                    e_1_1 = _b.sent();
-                    e_1 = { error: e_1_1 };
-                    return [3 /*break*/, 7];
-                case 6:
-                    try {
-                        if (funcs_1_1 && !funcs_1_1.done && (_a = funcs_1.return)) _a.call(funcs_1);
-                    }
-                    finally { if (e_1) throw e_1.error; }
-                    return [7 /*endfinally*/];
-                case 7: return [2 /*return*/];
-            }
-        });
-    }); };
+var waitUntil = function (cb) { return function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, cb()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); }; };
+exports.key = {
+    press: press,
+    hold: hold,
+    release: release,
+    wait: wait,
+    waitUntil: waitUntil
 };

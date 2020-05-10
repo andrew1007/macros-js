@@ -1,17 +1,23 @@
 import { key } from './key'
 import { sleep, asyncPipe } from './utils'
+import MiniMap from './screen/MiniMap'
 
 (async () => {
+    await sleep(1000)
+    const minimap = new MiniMap({
+        height: 150,
+        width: 150
+    })
+    minimap.getCharacter()
     const {
         hold,
-        press,
+        wait,
         release,
-        wait
     } = key
-    await sleep(1000)
+
     for (let i = 0; i < 1; i++) {
         const hello = asyncPipe(
-            wait(2000),
+            wait(5000),
             release.left,
         )
         await asyncPipe(
