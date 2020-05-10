@@ -39,35 +39,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var key_1 = require("./key");
 var utils_1 = require("./utils");
+var Shadower_1 = __importDefault(require("./Jobs/Shadower"));
+var key_1 = require("./key");
 var MiniMap_1 = __importDefault(require("./screen/MiniMap"));
 (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var minimap, hold, wait, release, i, hello;
+    var runWhile, bottomLeft, shadower;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, utils_1.sleep(1000)];
+            case 0: return [4 /*yield*/, utils_1.sleep(1000)
+                // const minimap = new MiniMap({
+                //     height: 150,
+                //     width: 150
+                // })
+                // minimap.getCharacter()
+            ];
             case 1:
                 _a.sent();
-                minimap = new MiniMap_1.default({
-                    height: 150,
-                    width: 150
+                runWhile = key_1.key.runWhile;
+                bottomLeft = new MiniMap_1.default({
+                    height: 1,
+                    width: 60,
+                    oHeight: 130,
+                    oWidth: 0
                 });
-                minimap.getCharacter();
-                hold = key_1.key.hold, wait = key_1.key.wait, release = key_1.key.release;
-                i = 0;
-                _a.label = 2;
-            case 2:
-                if (!(i < 1)) return [3 /*break*/, 5];
-                hello = utils_1.asyncPipe(wait(5000), release.left);
-                return [4 /*yield*/, utils_1.asyncPipe(hold.left, hello)()];
-            case 3:
-                _a.sent();
-                _a.label = 4;
-            case 4:
-                i++;
-                return [3 /*break*/, 2];
-            case 5: return [2 /*return*/];
+                shadower = new Shadower_1.default();
+                utils_1.asyncPipe(runWhile(function () { return __awaiter(void 0, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, shadower.bStep()
+                                // console.log(!bottomLeft.exists)
+                            ];
+                            case 1:
+                                _a.sent();
+                                // console.log(!bottomLeft.exists)
+                                return [2 /*return*/, false];
+                        }
+                    });
+                }); }))();
+                return [2 /*return*/];
         }
     });
 }); })();

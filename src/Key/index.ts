@@ -1,16 +1,21 @@
 import robot from 'robotjs'
-import { sleep, pipeableFunc } from '../utils'
+import { sleep, pipeableFunc, asyncPipe, logMsg } from '../utils'
 
 const _ = {} as unknown as keys
 
 interface keys {
-    left: pipeableFunc
+    left: pipeableFunc,
+    f: pipeableFunc,
+    s: pipeableFunc,
+    a: pipeableFunc,
+    right: pipeableFunc
 }
+robot.setKeyboardDelay(1)
 
 const press = new Proxy<keys>(_, {
     get: function (_, prop: string) {
         return () => {
-            console.error('pressing key:', prop)
+            logMsg('pressing key:', prop)
             robot.keyTap(prop)
         }
     }
@@ -19,7 +24,7 @@ const press = new Proxy<keys>(_, {
 const hold = new Proxy<keys>(_, {
     get: function (_, prop: string) {
         return () => {
-            console.error('holding key:', prop)
+            logMsg('holding key:', prop)
             robot.keyToggle(prop, 'down')
         }
     }
@@ -28,7 +33,7 @@ const hold = new Proxy<keys>(_, {
 const release = new Proxy<keys>(_, {
     get: function (_, prop: string) {
         return () => {
-            console.error('releasing key:', prop)
+            logMsg('releasing key:', prop)
             robot.keyToggle(prop, 'up')
         }
     }
@@ -36,13 +41,29 @@ const release = new Proxy<keys>(_, {
 
 const wait = (ms: number) => async () => {
     const positiveModifier = !!Math.round(Math.random())
-    const msModifier = positiveModifier ? Math.random() * 700 : -Math.random() * 700
-    console.error('waiting: ', (ms + msModifier).toFixed(1), 'ms')
-    await sleep(ms + msModifier)
+    const msModifier = positiveModifier ? Math.random() * 10 : -Math.random() * 10
+    logMsg('waiting: ', (ms + msModifier).toFixed(1), 'ms')
+    await sleep(ms)
 }
 
 const waitUntil = (cb: () => Promise<void>) => async () => {
     await cb()
+}
+
+const runWhile = (cb: () => Promise<boolean>, runCounter: number = Infinity) => async () => {
+    const isWhile = await cb()
+    console.log(runCounter)
+    if ((isWhile || isWhile === undefined) && runCounter > 0) {
+        await asyncPipe(
+            runWhile(cb, runCounter - 1)
+        )()
+    }
+}
+
+// if false, break out of routine
+const breakIf = (cb: () => Promise<boolean>) => async () => {
+    const breakControl = await cb()
+    return breakControl
 }
 
 export const key = {
@@ -50,5 +71,7 @@ export const key = {
     hold,
     release,
     wait,
-    waitUntil
+    waitUntil,
+    breakIf,
+    runWhile
 }

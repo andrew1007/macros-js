@@ -2,7 +2,9 @@ import robot from 'robotjs'
 
 type IConstructor = {
     height: number
-    width: number
+    width: number,
+    oHeight: number,
+    oWidth: number
 }
 
 const WINDOW_BAR_HEIGHT = 25
@@ -16,32 +18,37 @@ export default class MiniMap {
     topLeftHeight: number
     topLeftWidth: number
 
-    constructor({ height, width }: IConstructor) {
-        this.height = height + WINDOW_BAR_HEIGHT + IN_GAME_MINI_MAP_HEIGHT
-        this.width = width + IN_GAME_MINI_MAP_WIDTH
-        this.topLeftHeight = WINDOW_BAR_HEIGHT + IN_GAME_MINI_MAP_HEIGHT
-        this.topLeftWidth = IN_GAME_MINI_MAP_WIDTH
+    constructor({ height, width, oHeight, oWidth }: IConstructor) {
+        this.topLeftHeight = oHeight
+        this.topLeftWidth = oWidth
+        this.height = height + oHeight
+        this.width = width + oWidth
     }
 
     getCharacter() {
-        const X_DIMENSION = this.height
-        const Y_DIMENSION = this.width
+        const Y_DIMENSION = this.height + this.topLeftHeight
+        const X_DIMENSION = this.width + this.topLeftWidth
         const miniMapImage = robot.screen.capture(X_DIMENSION, Y_DIMENSION)
         const SEARC_INC = 4
         miniMapImage.colorAt(500, 500)
         for (let y = this.topLeftHeight; y < Y_DIMENSION; y += SEARC_INC) {
             for (let x = this.topLeftWidth; x < X_DIMENSION; x += SEARC_INC) {
-                if (miniMapImage.colorAt(y, x) === CHARACTER_HEX_COLOR) {
-                    console.error('character found at ', y, x)
+                if (miniMapImage.colorAt(x, y) === CHARACTER_HEX_COLOR) {
+                    // console.error('character found at ', x, y)
                     return { x, y }
                 }
             }
         }
 
-        console.error(`CHARACTER NOT FOUND. SEARCHED DIMENSIONS: X: ${this.height}, Y: ${this.width}`)
+        // console.error(`CHARACTER NOT FOUND. SEARCHED DIMENSIONS: X: ${this.height}, Y: ${this.width}`)
         return {
             x: 0,
             y: 0
         }
+    }
+
+    get exists() {
+        const { x, y } = this.getCharacter()
+        return !!x || !!y
     }
 }

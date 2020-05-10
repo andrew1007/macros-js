@@ -47,14 +47,20 @@ var __values = (this && this.__values) || function(o) {
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sleep = function (ms) { return new Promise(function (resolve) { return setTimeout(resolve, ms); }); };
+exports.sleep = function (ms) {
+    return new Promise(function (resolve) { return setTimeout(resolve, ms); });
+};
+/**
+ * functional piping func
+ * if you want to prematurely break out, use a func that returns false
+ */
 exports.asyncPipe = function () {
     var funcs = [];
     for (var _i = 0; _i < arguments.length; _i++) {
         funcs[_i] = arguments[_i];
     }
     return function () { return __awaiter(void 0, void 0, void 0, function () {
-        var funcs_1, funcs_1_1, func, e_1_1;
+        var funcs_1, funcs_1_1, func, val, e_1_1;
         var e_1, _a;
         return __generator(this, function (_b) {
             switch (_b.label) {
@@ -67,7 +73,11 @@ exports.asyncPipe = function () {
                     func = funcs_1_1.value;
                     return [4 /*yield*/, func()];
                 case 2:
-                    _b.sent();
+                    val = _b.sent();
+                    if (val === false) {
+                        // propgate value up 
+                        return [2 /*return*/, val];
+                    }
                     _b.label = 3;
                 case 3:
                     funcs_1_1 = funcs_1.next();
@@ -87,4 +97,11 @@ exports.asyncPipe = function () {
             }
         });
     }); };
+};
+exports.logMsg = function () {
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i] = arguments[_i];
+    }
+    // console.log(...args)
 };

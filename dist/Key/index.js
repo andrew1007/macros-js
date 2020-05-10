@@ -42,10 +42,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var robotjs_1 = __importDefault(require("robotjs"));
 var utils_1 = require("../utils");
 var _ = {};
+robotjs_1.default.setKeyboardDelay(1);
 var press = new Proxy(_, {
     get: function (_, prop) {
         return function () {
-            console.error('pressing key:', prop);
+            utils_1.logMsg('pressing key:', prop);
             robotjs_1.default.keyTap(prop);
         };
     }
@@ -53,7 +54,7 @@ var press = new Proxy(_, {
 var hold = new Proxy(_, {
     get: function (_, prop) {
         return function () {
-            console.error('holding key:', prop);
+            utils_1.logMsg('holding key:', prop);
             robotjs_1.default.keyToggle(prop, 'down');
         };
     }
@@ -61,7 +62,7 @@ var hold = new Proxy(_, {
 var release = new Proxy(_, {
     get: function (_, prop) {
         return function () {
-            console.error('releasing key:', prop);
+            utils_1.logMsg('releasing key:', prop);
             robotjs_1.default.keyToggle(prop, 'up');
         };
     }
@@ -72,9 +73,9 @@ var wait = function (ms) { return function () { return __awaiter(void 0, void 0,
         switch (_a.label) {
             case 0:
                 positiveModifier = !!Math.round(Math.random());
-                msModifier = positiveModifier ? Math.random() * 700 : -Math.random() * 700;
-                console.error('waiting: ', (ms + msModifier).toFixed(1), 'ms');
-                return [4 /*yield*/, utils_1.sleep(ms + msModifier)];
+                msModifier = positiveModifier ? Math.random() * 10 : -Math.random() * 10;
+                utils_1.logMsg('waiting: ', (ms + msModifier).toFixed(1), 'ms');
+                return [4 /*yield*/, utils_1.sleep(ms)];
             case 1:
                 _a.sent();
                 return [2 /*return*/];
@@ -91,10 +92,44 @@ var waitUntil = function (cb) { return function () { return __awaiter(void 0, vo
         }
     });
 }); }; };
+var runWhile = function (cb, runCounter) {
+    if (runCounter === void 0) { runCounter = Infinity; }
+    return function () { return __awaiter(void 0, void 0, void 0, function () {
+        var isWhile;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, cb()];
+                case 1:
+                    isWhile = _a.sent();
+                    console.log(runCounter);
+                    if (!((isWhile || isWhile === undefined) && runCounter > 0)) return [3 /*break*/, 3];
+                    return [4 /*yield*/, utils_1.asyncPipe(runWhile(cb, runCounter - 1))()];
+                case 2:
+                    _a.sent();
+                    _a.label = 3;
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); };
+};
+// if false, break out of routine
+var breakIf = function (cb) { return function () { return __awaiter(void 0, void 0, void 0, function () {
+    var breakControl;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, cb()];
+            case 1:
+                breakControl = _a.sent();
+                return [2 /*return*/, breakControl];
+        }
+    });
+}); }; };
 exports.key = {
     press: press,
     hold: hold,
     release: release,
     wait: wait,
-    waitUntil: waitUntil
+    waitUntil: waitUntil,
+    breakIf: breakIf,
+    runWhile: runWhile
 };
