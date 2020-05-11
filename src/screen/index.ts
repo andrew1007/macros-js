@@ -1,3 +1,0 @@
-const position = () => {}
-
-export default {}

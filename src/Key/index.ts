@@ -52,7 +52,6 @@ const waitUntil = (cb: () => Promise<void>) => async () => {
 
 const runWhile = (cb: () => Promise<boolean>, runCounter: number = Infinity) => async () => {
     const isWhile = await cb()
-    console.log(runCounter)
     if ((isWhile || isWhile === undefined) && runCounter > 0) {
         await asyncPipe(
             runWhile(cb, runCounter - 1)

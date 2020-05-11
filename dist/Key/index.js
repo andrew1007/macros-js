@@ -101,7 +101,6 @@ var runWhile = function (cb, runCounter) {
                 case 0: return [4 /*yield*/, cb()];
                 case 1:
                     isWhile = _a.sent();
-                    console.log(runCounter);
                     if (!((isWhile || isWhile === undefined) && runCounter > 0)) return [3 /*break*/, 3];
                     return [4 /*yield*/, utils_1.asyncPipe(runWhile(cb, runCounter - 1))()];
                 case 2:
