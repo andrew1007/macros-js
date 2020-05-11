@@ -1,2 +1,2 @@
-import { key } from './key';
+import key from './key';
 export default key;

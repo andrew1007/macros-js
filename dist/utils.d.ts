@@ -5,4 +5,3 @@ export declare type pipeableFunc = () => Promise<any>;
  * if you want to prematurely break out, use a func that returns false
  */
 export declare const asyncPipe: (...funcs: pipeableFunc[]) => pipeableFunc;
-export declare const logMsg: (...args: any[]) => void;

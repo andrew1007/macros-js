@@ -17,7 +17,3 @@ export const asyncPipe = (...funcs: pipeableFunc[]): pipeableFunc => async () =>
         }
     }
 }
-
-export const logMsg = (...args: any[]) => {
-    // console.log(...args)
-}
