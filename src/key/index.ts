@@ -1,10 +1,10 @@
 import robot from 'robotjs'
-import { availableKeys } from './types'
+import { AvailableKeys } from './types'
 import { KEY_NAMES } from './constants'
 
-const _ = {} as unknown as availableKeys
+const _ = {} as unknown as AvailableKeys
 
-const press = new Proxy<availableKeys>(_, {
+const press = new Proxy<AvailableKeys>(_, {
     get: function (_, prop: string) {
         return () => {
             robot.keyTap(KEY_NAMES[prop])
@@ -12,7 +12,7 @@ const press = new Proxy<availableKeys>(_, {
     }
 })
 
-const hold = new Proxy<availableKeys>(_, {
+const hold = new Proxy<AvailableKeys>(_, {
     get: function (_, prop: string) {
         return () => {
             robot.keyToggle(KEY_NAMES[prop], 'down')
@@ -20,7 +20,7 @@ const hold = new Proxy<availableKeys>(_, {
     }
 })
 
-const release = new Proxy<availableKeys>(_, {
+const release = new Proxy<AvailableKeys>(_, {
     get: function (_, prop: string) {
         return () => {
             robot.keyToggle(KEY_NAMES[prop], 'up')

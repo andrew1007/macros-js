@@ -52,10 +52,8 @@
     "eslint-plugin-react-hooks": "^1.7.0",
     "jest": "^25.1.0",
     "nodemon": "^1.19.1",
-    "prettier": "^1.18.2",
     "ts-jest": "^25.2.1",
     "tslint": "^5.20.1",
-    "tslint-config-prettier": "^1.18.0",
     "tslint-eslint-rules": "^5.4.0",
     "typescript": "^3.6.2",
     "typings": "^2.1.1"

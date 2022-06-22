@@ -47,14 +47,16 @@ var __values = (this && this.__values) || function(o) {
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sleep = function (ms) {
+exports.asyncPipe = exports.sleep = void 0;
+var sleep = function (ms) {
     return new Promise(function (resolve) { return setTimeout(resolve, ms); });
 };
+exports.sleep = sleep;
 /**
  * functional piping func
  * if you want to prematurely break out, use a func that returns false
  */
-exports.asyncPipe = function () {
+var asyncPipe = function () {
     var funcs = [];
     for (var _i = 0; _i < arguments.length; _i++) {
         funcs[_i] = arguments[_i];
@@ -75,7 +77,7 @@ exports.asyncPipe = function () {
                 case 2:
                     val = _b.sent();
                     if (val === false) {
-                        // propgate value up 
+                        // propgate value up
                         return [2 /*return*/, val];
                     }
                     _b.label = 3;
@@ -98,3 +100,4 @@ exports.asyncPipe = function () {
         });
     }); };
 };
+exports.asyncPipe = asyncPipe;

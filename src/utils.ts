@@ -1,18 +1,19 @@
-export const sleep: (ms: number) => Promise<void> = (ms) => {
-    return new Promise(resolve => setTimeout(resolve, ms))
-}
+export const sleep: (ms: number) => Promise<void> = ms =>
+    new Promise(resolve => setTimeout(resolve, ms))
 
-export type pipeableFunc = () => Promise<any>
+export type pipeableFunc = () => Promise<any>;
 
 /**
  * functional piping func
  * if you want to prematurely break out, use a func that returns false
  */
-export const asyncPipe = (...funcs: pipeableFunc[]): pipeableFunc => async () => {
-    for (let func of funcs) {
+export const asyncPipe = (
+    ...funcs: pipeableFunc[]
+): pipeableFunc => async () => {
+    for (const func of funcs) {
         const val = await func()
         if (val === false) {
-            // propgate value up 
+            // propagate value up
             return val
         }
     }

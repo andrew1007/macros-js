@@ -1,6 +1,6 @@
-import { availableKeys } from './types'
+import { AvailableKeys } from './types'
 
-type keyMapType = { [key in keyof availableKeys]: string }
+type keyMapType = { [key in keyof AvailableKeys]: string }
 
 /**
  * @description protect our key name defintions from any
